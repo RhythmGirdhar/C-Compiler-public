@@ -1,0 +1,8 @@
+t0 = 12 * 4
+t1 = t0 / 2
+t2 = t1 + 1
+a = t2
+param a
+param b
+param c
+call(add, 3)

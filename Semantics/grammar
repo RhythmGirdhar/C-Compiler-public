@@ -1,0 +1,177 @@
+symbol: 	{	//printsymtable();
+				//return 0;
+			}
+	  ext_dec
+	| symbol ext_dec
+	;
+
+ext_dec
+	: INT MAIN '(' ')' compound_statement
+	| VOID MAIN '(' ')' compound_statement
+	| declaration
+	| headers 	
+	;
+
+headers
+	: HASH INCLUDE HEADER_LITERAL 
+	| HASH INCLUDE '<' libraries '>'
+	;
+
+libraries
+	: STDIO
+	| STDLIB
+	| MATH
+	| STRING
+	| TIME
+	;
+
+compound_statement
+	: '{' '}' 
+	| '{' block_item_list '}'
+	;
+
+block_item_list
+	: block_item
+	| block_item_list block_item
+	;
+
+block_item
+	: declaration
+	| statement 	{
+						struct node *ftp;
+						ftp = first;
+						while(ftp!=NULL){
+							if(ftp->scope == scope && ftp->valid == 1){
+								ftp = ftp->link;
+							}
+							ftp=ftp->link;
+						}
+						scope--;
+					}
+	;
+
+declaration
+	: type_specifier init_declarator_list ';'
+	;
+
+statement
+	: compound_statement
+	| expression_statement
+	| iteration_statement
+	;
+
+type_specifier
+	: VOID 		
+	| CHAR 		
+	| INT 		
+	| FLOAT 	
+	;
+
+init_declarator_list
+	: init_declarator
+	| init_declarator_list ',' init_declarator
+	;
+
+init_declarator
+	: IDENTIFIER '=' assignment_expression
+	| IDENTIFIER
+	;
+
+assignment_expression
+	: conditional_expression
+	| unary_expression assignment_operator assignment_expression
+	;
+
+conditional_expression
+	: equality_expression
+	| equality_expression '?' expression ':' conditional_expression
+	;
+
+assignment_operator
+	: '='
+	| ADD_ASSIGN
+	| SUB_ASSIGN
+	;
+
+expression_statement
+	: ';'
+	| expression ';'
+	;
+
+expression
+	: assignment_expression
+	| expression ',' assignment_expression
+	;
+
+iteration_statement
+	: FOR '(' expression_statement expression_statement ')' statement
+	| FOR '(' expression_statement expression_statement expression ')' statement
+	| FOR '(' declaration expression_statement ')' statement	
+	| FOR '(' declaration expression_statement expression ')' statement
+	;
+
+primary_expression
+	: IDENTIFIER
+	| INTEGER_LITERAL
+	| STRING_LITERAL
+	| FLOAT_LITERAL	
+	| CHARACTER_LITERAL	
+	| '(' expression ')'
+	;
+
+postfix_expression
+	: primary_expression
+	| postfix_expression '(' ')'
+	| postfix_expression '.' IDENTIFIER
+	| postfix_expression INC_OP
+	| postfix_expression DEC_OP
+	;
+
+unary_expression
+	: postfix_expression
+	| unary_operator unary_expression
+	;
+
+unary_operator
+	: '+'
+	| '-'
+	| '&'
+	| '|'
+	| '!'
+	;
+
+multiplicative_expression
+	: unary_expression
+	| multiplicative_expression '*' unary_expression
+	| multiplicative_expression '/' unary_expression
+	| multiplicative_expression '%' unary_expression
+	;
+
+additive_expression
+	: multiplicative_expression
+	| additive_expression '+' multiplicative_expression
+	| additive_expression '-' multiplicative_expression
+	;
+
+relational_expression
+	: additive_expression
+	| relational_expression '<' additive_expression
+	| relational_expression '>' additive_expression
+	| relational_expression LE_OP additive_expression
+	| relational_expression GE_OP additive_expression
+	;
+
+equality_expression
+	: relational_expression
+	| equality_expression EQ_OP relational_expression
+	| equality_expression NE_OP relational_expression
+	;
+
+
+
+
+
+
+
+
+
